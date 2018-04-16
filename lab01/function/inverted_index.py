@@ -6,7 +6,9 @@ def build(data):
         doc_id = row[2]
         list_doc_id = []
         for word in doc:
-            print word + doc_id
-            inverted_index[word] = list_doc_id.append(doc_id)
+            # print "Palavra %s - DocID %s" % (word, doc_id)
+            list_doc_id.append(doc_id)
+            # print list_doc_id
+            inverted_index[word] = list_doc_id
         list_doc_id = []
     return inverted_index
