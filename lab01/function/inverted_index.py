@@ -1,5 +1,6 @@
 #coding: utf-8
 import nltk as n
+import operator as o
 
 inverted_index = {}
 def build(data):
@@ -8,7 +9,6 @@ def build(data):
         doc.noticia = doc.noticia.lower()
         words = [str(word) for word in n.word_tokenize(doc.noticia)]
         for word in words:
-            # print type(inverted_index.setdefault(word, []))
             inverted_index.setdefault(word, []).append(doc.idNoticia)
 
 
@@ -32,7 +32,7 @@ def _search_one_term(term):
     if inverted_index.has_key(term.lower()):
         return sorted(list(inverted_index[term.lower()]))
     else:
-        return None
+        return "Você quis dizer %s" % (_word_proximity(term))
 
 def _search_and(first_term, second_term):
     if inverted_index.has_key(first_term.lower()) and inverted_index.has_key(second_term.lower()):
@@ -49,3 +49,11 @@ def _search_or(first_term, second_term):
         return sorted(list(inverted_index[second_term.lower()]))
     else:
         return None
+
+def _word_proximity(search_word):
+    distance = {}
+    for word in inverted_index.keys():
+        distance[word] = n.edit_distance(search_word, word)
+
+    sorted_list = sorted(distance.items(), key = o.itemgetter(1))
+    return sorted_list[0]
