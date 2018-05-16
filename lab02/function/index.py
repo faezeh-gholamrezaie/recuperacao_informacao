@@ -1,5 +1,7 @@
-#coding: utf-8
+# coding: utf-8
 import nltk as n
+import math
+from collections import Counter
 
 inverted_index = {}
 def build(data):
@@ -7,17 +9,26 @@ def build(data):
     for index, doc in data.iterrows():
         doc.noticia = doc.noticia.lower()
         words = [str(word) for word in n.word_tokenize(doc.noticia)]
-        
+        freq_words = Counter(words)
         for word in words:
-            inverted_index.setdefault((word, 1), []).append(doc.idNoticia)
-
+            inverted_index.setdefault(word, []).append((doc.idNoticia, freq_words[word]))
 
     for word in inverted_index.keys():
-        inverted_index[(word, 1)] = set(inverted_index[word])
+        inverted_index[word] = set(inverted_index[word])
 
-    return inverted_index
+    inverted_index_aux = {}
+    M = len(data.noticia)
+    for word in inverted_index.keys():
+        k = len(list(inverted_index[word]))
 
-def frequency(words, docId):
-	for word in words:
-		print word
-		print docId
+        for i in range(len(list(inverted_index[word]))):
+            inverted_index_aux.setdefault(word, []).append({
+                "docId": list(inverted_index[word])[i][0],
+                "tf": list(inverted_index[word])[i][1] ,
+                "idf": idf(M, k)
+            })
+
+    return inverted_index_aux['segundo']
+
+
+def idf(M, k): return math.log10(M + 1) / k
