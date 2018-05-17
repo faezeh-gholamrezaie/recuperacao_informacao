@@ -1,15 +1,14 @@
 #coding: utf-8
-def TF(inverted_index, term, k = 5):
+def TF_IDF(inverted_index, term, k = 5):
     term_search = term.split()
     result_id = []
     result = {}
     for word_term in term_search:
         if inverted_index.has_key(word_term):
-            print word_term
             docId_word_term = []
             for i in range(len(inverted_index[word_term])):
                 docId_word_term.append(inverted_index[word_term][i]["docId"])
-                result.setdefault(inverted_index[word_term][i]["docId"], []).append(inverted_index[word_term][i]["tf"])
+                result.setdefault(inverted_index[word_term][i]["docId"], []).append(inverted_index[word_term][i]["tf"] * inverted_index[word_term][i]["idf"])
             result_id.append(docId_word_term)
 
     i = set(result_id[0])
@@ -19,4 +18,4 @@ def TF(inverted_index, term, k = 5):
     z = {}
     for x in i:
         z[x] = sum(result[x])
-    print sorted(z, key = z.get, reverse = True)[:k]
+    print sorted(z, key=z.get, reverse=True)[:k]

@@ -1,30 +1,15 @@
 #coding: utf-8
-import nltk as n
-
-def binary_representation(data, term):
+def binary_representation(inverted_index, term, k = 5):
     term_search = term.split()
-    vector_binary = {}
-    data["noticia"] = data.titulo + " " + data.subTitulo + " " + data.conteudo
-    for index, doc in data.iterrows():
-        doc.noticia = doc.noticia.lower()
-        words = [str(word) for word in n.word_tokenize(doc.noticia)]
-        vector = []
-        for word in words:
-            for word_term in term_search:
-                if word_term == word:
-                    vector.append(1)
-                elif len(vector) != 0:
-                    vector.append(0)
-        vector_binary[doc.idNoticia] = sum(vector)
+    result = []
+    for word_term in term_search:
+        if inverted_index.has_key(word_term):
+            docId_word_term = []
+            for i in range(len(inverted_index[word_term])):
+                docId_word_term.append(inverted_index[word_term][i]["docId"])
+            result.append(docId_word_term)
 
-    print vector_binary
-                # if word_term == word:
-                #     vector.append(1)
-                # elif len(vector) != 0:
-                #     vector.append(0)
-        # # obter o valor da multiplicaçao do vetor e da query
-        # if len(vector) != 0 and sum(vector) == 2:
-        #     vector_binary.append(vector[:len(term_search)])
-        #     print vector_binary
-
-    # print vector_binary[:2]
+    i = set(result[0])
+    for x in result[1:]:
+        i = i & set(x)
+    print sorted(list(i))[:k]
