@@ -12,4 +12,5 @@ def binary_representation(inverted_index, term, k = 5):
     i = set(result[0])
     for x in result[1:]:
         i = i & set(x)
-    print sorted(list(i))[:k]
+
+    return list(i)[:k]

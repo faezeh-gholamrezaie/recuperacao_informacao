@@ -19,4 +19,4 @@ def TF(inverted_index, term, k = 5):
     z = {}
     for x in i:
         z[x] = sum(result[x])
-    print sorted(z, key = z.get, reverse = True)[:k]
+    return sorted(z, key = z.get, reverse = True)[:k]

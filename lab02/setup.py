@@ -15,6 +15,6 @@ data = data.replace(np.NAN, "")
 inverted_index =  inverted_index.build(data)
 
 
-# b.binary_representation(inverted_index, "segundo turno")
+b.binary_representation(inverted_index, "segundo turno")
 # tf.TF(inverted_index, "segundo turno")
-tfidf.TF_IDF(inverted_index, "segundo turno")
+# tfidf.TF_IDF(inverted_index, "segundo turno")
