@@ -5,7 +5,6 @@ def TF(inverted_index, term, k = 5):
     result = {}
     for word_term in term_search:
         if inverted_index.has_key(word_term):
-            print word_term
             docId_word_term = []
             for i in range(len(inverted_index[word_term])):
                 docId_word_term.append(inverted_index[word_term][i]["docId"])
