@@ -1,0 +1,12 @@
+retirar pontuaçao 
+retirar acentos 
+retirar hifens
+vetor binario
+idf - retira termos menos relevantes -> usa log() idf - palavra 
+tf - problema crescer de forma logaritmica  - documento
+BM25/Okapi = (k + 1) * x /(x + k) passando como parametro do tf
+normalizaçao pivotatica 
+
+Modelo vetorial
+calcular o idf de cada palavra IDF
+binario
