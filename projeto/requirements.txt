@@ -4,3 +4,4 @@ SciPy>=0.13.3
 nltk==3.2.5
 scikit-learn==0.19.2
 matplotlib==2.2.2
+wordcloud==1.4.1
