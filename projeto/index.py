@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import pandas as p
 import nltk as n
 import matplotlib.pyplot as plt
 import re
+import seaborn as sb
 from sklearn.feature_extraction.text import TfidfVectorizer
 from collections import Counter
 from sklearn.cluster import KMeans
@@ -25,26 +27,26 @@ def clear_text(text):
 
     return pattern.sub(' ', text)
 
-data = p.read_csv("data-set/estadao_noticias_eleicao.csv", encoding = "utf-8")[:100]
-data = data.replace(np.NAN, "")
+#data = p.read_csv("data-set/estadao_noticias_eleicao.csv", encoding = "utf-8")[:100]
+#data = data.replace(np.NAN, "")
 
-documents = build(data)
+# documents = build(data)
 
-# documents = ["This little kitty came to play when I was eating at a restaurant",
-#              "Merley has the best squooshy kitten belly",
-#              "Google Translate app is incredible",
-#              "If you open 100 tab in google you get a smiley face",
-#              "Best cat photo I've ever taken",
-#              "Climbing ninja cat",
-#              "Impressed with google map feedback",
-#              "Key promoter extension for Google Chrome"]
+documents = ["This little kitty came to play when I was eating at a restaurant",
+              "Merley has the best squooshy kitten belly",
+              "Google Translate app is incredible",
+              "If you open 100 tab in google you get a smiley face",
+              "Best cat photo I've ever taken",
+              "Climbing ninja cat",
+              "Impressed with google map feedback",
+              "Key promoter extension for Google Chrome"]
 
 vectorizer = TfidfVectorizer(stop_words='english')
 vector = vectorizer.fit_transform(documents)
 
 km = KMeans(n_clusters= 2, init='k-means++', max_iter=10000, n_init=100)
 km.fit(vector.toarray())
-o = km.fit_transform(vector)
+o = km.predict(vector)
 
 labels = km.fit_predict(vector.toarray())
 centroids = np.array(km.cluster_centers_)
@@ -77,8 +79,8 @@ for group in groups_term_freq.keys():
 
     plt.figure()
     plt.barh(x, y, color="blue")
-    plt.xlabel('Número de ocorrências')
-    plt.title('Palavras com a maior frequência no grupo '+ str(group))
+    plt.xlabel("Número de ocorrências")
+    plt.title("Palavras com a maior frequência no grupo " + str(group))
 
 
 tsne_init = 'pca'  # could also be 'random'
@@ -86,14 +88,34 @@ tsne_perplexity = 20.0
 tsne_early_exaggeration = 4.0
 tsne_learning_rate = 1000
 random_state = 1
+
 model = TSNE(n_components=2, random_state=random_state, init=tsne_init, perplexity=tsne_perplexity,
          early_exaggeration=tsne_early_exaggeration, learning_rate=tsne_learning_rate)
 
+model2 = TSNE(n_components=2, random_state=random_state, init=tsne_init, perplexity=tsne_perplexity,
+         early_exaggeration=tsne_early_exaggeration, learning_rate=tsne_learning_rate)
 
 transformed_centroids = model.fit_transform(centroids)
+point = model2.fit_transform(vector.toarray())
+
+df = p.DataFrame(point, index = [i for i in range(len(point))], columns = ['x','y'])
+df['group'] = km.labels_
+
+
+sb.pairplot(df, 'group')
+
+colmap = {1: 'r', 2: 'g', 3: 'b'}
 plt.figure()
-plt.title('Grupos criados pelo algoritmo Kmeans')
-plt.scatter(transformed_centroids[:, 0], transformed_centroids[:, 1], marker='x')
+plt.title("Grupos criados pelo algoritmo Kmeans")
+# plt.scatter(df['x'], df['y'], color='black')
+plt.scatter(transformed_centroids[:, 0], transformed_centroids[:, 1], marker="x")
+
+
+plt.figure()
+plt.title("Grupos criados pelo algoritmo Kmeanssdfsdsdfsd")
+plt.scatter(df['x'], df['y'], color='black')
+# plt.scatter(transformed_centroids[:, 0], transformed_centroids[:, 1], marker="x")
+
 
 plt.show()
 
